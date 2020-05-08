@@ -1,6 +1,7 @@
 #!/bin/bash
-cd ~
 sudo apt-get install python3-pip
+pip3 install -r requirements.txt
+cd ~
 pip3 install awscli --upgrade --user
 export PATH=/home/pi/.local/bin:$PATH
 aws configure set aws_access_key_id 'AKIAJRFOLRO6MACCCL6A'
