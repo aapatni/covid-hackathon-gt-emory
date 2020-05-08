@@ -1,1 +1,4 @@
 *.mp4
+venv/
+.idea/
+.DS_Store
