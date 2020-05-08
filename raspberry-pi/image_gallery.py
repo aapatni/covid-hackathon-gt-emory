@@ -1,4 +1,5 @@
 import tkinter, glob, os
+import PIL
 from PIL import ImageTk, Image
 from os import listdir
 
@@ -24,8 +25,6 @@ class Gallery:
         self.root.bind("<Button-1>", lambda e: (self.left_click(e)))
         self.root.bind("<Button-2>", lambda e: (self.right_click(e)))
 
-
-
         # initialize canvas
         self.canvas = tkinter.Canvas(self.root, width=self.screen_width, height=self.screen_height)
         self.canvas.pack()
@@ -46,7 +45,14 @@ class Gallery:
         self.file_list.sort(key=lambda x: os.path.getmtime(x))
 
     def init_pil_image(self):
-        self.pil_image = Image.open(self.file_list[self.file_counter % len(self.file_list)])
+        bad_image = True
+        while bad_image:
+            try:
+                self.pil_image = Image.open(self.file_list[self.file_counter % len(self.file_list)])
+                bad_image = False
+            except PIL.UnidentifiedImageError:
+                self.file_list.pop(self.file_counter % len(self.file_list))
+
         self.set_image_size()
 
     def set_image_size(self):
