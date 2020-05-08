@@ -23,5 +23,7 @@ def viewPIL(pilImage):
 
 
 def main():
-    pilImage = Image.open("path")
+    pilImage = Image.open("videos/image1.jpg")
     viewPIL(pilImage)
+
+main()
