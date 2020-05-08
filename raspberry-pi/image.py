@@ -6,6 +6,10 @@ else:
     import tkinter
 from PIL import Image, ImageTk
 
+def handleButton1(event):
+    print(event)
+
+
 def showPIL(pilImage):
     root = tkinter.Tk()
     w, h = root.winfo_screenwidth(), root.winfo_screenheight()
@@ -13,6 +17,7 @@ def showPIL(pilImage):
     root.geometry("%dx%d+0+0" % (w, h))
     root.focus_set()
     root.bind("<Escape>", lambda e: (e.widget.withdraw(), e.widget.quit()))
+    root.bind("<Button-1>", lambda e: (handleButton1(e)))
     canvas = tkinter.Canvas(root,width=w,height=h)
     canvas.pack()
     canvas.configure(background='black')
