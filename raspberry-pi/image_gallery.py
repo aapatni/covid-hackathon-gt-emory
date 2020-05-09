@@ -2,6 +2,9 @@ import tkinter, glob, os
 import PIL
 from PIL import ImageTk, Image
 from os import listdir
+from playsound import playsound
+import simpleaudio as sa
+import pygame, time
 
 
 class Gallery:
@@ -10,6 +13,7 @@ class Gallery:
         self.img_width = None
         self.img_height = None
         self.pil_image = None
+        self.current_file = None
         self.file_list = []
         self.file_counter = 0
 
@@ -44,6 +48,9 @@ class Gallery:
         self.file_list = [path_to_videos + filename for filename in filenames]
         self.file_list.sort(key=lambda x: os.path.getmtime(x))
 
+    def set_current_file(self):
+        self.current_file = self.file_list[self.file_counter % len(self.file_list)]
+
     def init_pil_image(self):
         bad_image = True
         while bad_image:
@@ -64,13 +71,35 @@ class Gallery:
         self.pil_image = self.pil_image.resize((self.img_width, self.img_height), Image.ANTIALIAS)
 
     def redraw_pil(self):
+        self.set_image_size()
         self.image_to_draw = ImageTk.PhotoImage(self.pil_image)
         self.canvas.itemconfig(self.image_on_canvas, image=self.image_to_draw)
 
+    def view(self):
+        bad_file = True
+        self.set_current_file()
+        while bad_file:
+            print("Current File: " + self.current_file)
+            try:
+                self.pil_image = Image.open(self.current_file)
+                self.redraw_pil()
+                bad_file = False
+            except PIL.UnidentifiedImageError:
+                print("\tFailed Image: " + self.current_file)
+                try:
+                    playsound(self.current_file, block=False)
+                    bad_file = False
+                except Exception as e:
+                    print("\tFailed Audio: " + self.current_file)
+                    print("\t\tERROR: " + str(e))
+                    self.file_list.remove(self.current_file)
+                    self.set_current_file()
+                    bad_file = False
+                    self.view()
+
     def left_click(self, event):
         self.file_counter += 1
-        self.init_pil_image()
-        self.redraw_pil()
+        self.view()
 
     def right_click(self, event):
         self.file_counter -= 1
