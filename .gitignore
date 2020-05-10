@@ -1,0 +1,5 @@
+*.mp4
+venv/
+.idea/
+.DS_Store
+raspberry-pi/videos/
